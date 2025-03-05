@@ -1,0 +1,277 @@
+/*
+
+\033[H\033[J\033[H
+
+
+
+
+┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐
+|       ||     ● ||     ● || ●   ● || ●   ● || ●   ● |
+|   ●   ||       ||   ●   ||       ||   ●   || ●   ● |
+|       || ●     || ●     || ●   ● || ●   ● || ●   ● |
+└───────┘└───────┘└───────┘└───────┘└───────┘└───────┘
+
+┌───────┐
+|       |
+|       |
+|       |
+└───────┘
+┌───────┐
+|       |
+|   ●   |
+|       |
+└───────┘
+┌───────┐
+|     ● |
+|       |
+| ●     |
+└───────┘
+┌───────┐
+|     ● |
+|   ●   |
+| ●     |
+└───────┘
+┌───────┐
+| ●   ● |
+|       |
+| ●   ● |
+└───────┘
+┌───────┐
+| ●   ● |
+|   ●   |
+| ●   ● |
+└───────┘
+┌───────┐
+| ●   ● |
+| ●   ● |
+| ●   ● |
+└───────┘
+
+
+
+
+
+┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐
+|       ||     ● ||     ● || ●   ● || ●   ● |    1/3
+|   ●   ||       ||   ●   ||       ||   ●   |
+|       || ●     || ●     || ●   ● || ●   ● |
+└───────┘└───────┘└───────┘└───────┘└───────┘  Würfeln
+   ( )      ( )      ( )      ( )      ( )       (x)   
+
+( ) Einser         500% [XX]  |  XX  |  +XX
+( ) Zweier         500% [XX]  |  XX  |  -XX
+( ) Dreier         500% [XX]  |  XX  |  +XX
+( ) Vierer         500% [XX]  |  XX  |  -XX
+( ) Fünfer         500% [XX]  |  XX  |  +XX
+( ) Sechser        500% [XX]  |  XX  |  -XX
+                              |
+( ) Summe          500% [XX]  |  XX  |  +XX
+( ) Bonus (+35)    500% [XX]  |  XX
+( ) Gesamt oben    500% [XX]  | YYY
+                              |
+( ) Dreierpasch    500% [XX]  |  XX
+( ) Viererpasch    500% [XX]  |  XX
+( ) Full House     500% [XX]  |  XX
+( ) Kleine Straße  500% [XX]  |  XX
+( ) Große Straße   500% [XX]  |  XX
+( ) Kniffel        500% [XX]  | YYY
+( ) Chance         500% [XX]  |  XX
+                              |
+( ) Gesamt unten   500% [XX]  | YYY
+( ) Gesamt oben    500% [XX]  | YYY
+( ) Erbegnis       500% [XX]  | YYY
+
+selected[]
+possiblePoints[]
+Points[]
+difference[]
+
+
+
+{
+    "┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐         ",
+    "|       ||     ● ||     ● || ●   ● || ●   ● |    1/3  ",
+    "|   ●   ||       ||   ●   ||       ||   ●   |         ",
+    "|       || ●     || ●     || ●   ● || ●   ● |         ",
+    "└───────┘└───────┘└───────┘└───────┘└───────┘  Würfeln",
+    "   ( )      ( )      ( )      ( )      ( )       ( )  ",
+    "                                                      ",
+    "( ) Einser         [  ]  |      |                     ",
+    "( ) Zweier         [  ]  |      |                     ",
+    "( ) Dreier         [  ]  |      |                     ",
+    "( ) Vierer         [  ]  |      |                     ",
+    "( ) Fünfer         [  ]  |      |                     ",
+    "( ) Sechser        [  ]  |      |                     ",
+    "                         |                            ",
+    "( ) Summe          [  ]  |      |                     ",
+    "( ) Bonus (+35)    [  ]  |                            ",
+    "( ) Gesamt oben    [  ]  |                            ",
+    "                         |                            ",
+    "( ) Dreierpasch    [  ]  |      |                     ",
+    "( ) Viererpasch    [  ]  |      |                     ",
+    "( ) Full House     [  ]  |      |                     ",
+    "( ) Kleine Straße  [  ]  |      |                     ",
+    "( ) Große Straße   [  ]  |      |                     ",
+    "( ) Kniffel        [  ]  |      |                     ",
+    "( ) Chance         [  ]  |      |                     ",
+    "                         |                            ",
+    "( ) Gesamt unten   [  ]  |                            ",
+    "( ) Gesamt oben    [  ]  |                            ",
+    "( ) Erbegnis       [  ]  |                            "
+   };
+
+{
+   "+-------+ +-------+ +-------+ +-------+ +-------+         ",
+   "|       | |     o | |     o | | o   o | | o   o |    1/3  ",
+   "|   o   | |       | |   o   | |       | |   o   |         ",
+   "|       | | o     | | o     | | o   o | | o   o |         ",
+   "+-------+ +-------+ +-------+ +-------+ +-------+  Würfeln",
+   "   (x)       ( )       ( )       ( )       ( )       ( )  ",
+   "                                                          ",
+   "( ) Einser         [  ]  |      |                         ",
+   "( ) Zweier         [  ]  |      |                         ",
+   "( ) Dreier         [  ]  |      |                         ",
+   "( ) Vierer         [  ]  |      |                         ",
+   "( ) Fünfer         [  ]  |      |                         ",
+   "( ) Sechser        [  ]  |      |                         ",
+   "                         |                                ",
+   "( ) Summe          [  ]  |      |                         ",
+   "( ) Bonus (+35)    [  ]  |                                ",
+   "( ) Gesamt oben    [  ]  |                                ",
+   "                         |                                ",
+   "( ) Dreierpasch    [  ]  |      |                         ",
+   "( ) Viererpasch    [  ]  |      |                         ",
+   "( ) Full House     [  ]  |      |                         ",
+   "( ) Kleine Straße  [  ]  |      |                         ",
+   "( ) Große Straße   [  ]  |      |                         ",
+   "( ) Kniffel        [  ]  |      |                         ",
+   "( ) Chance         [  ]  |      |                         ",
+   "                         |                                ",
+   "( ) Gesamt unten   [  ]  |                                ",
+   "( ) Gesamt oben    [  ]  |                                ",
+   "( ) Erbegnis       [  ]  |                                "
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐
+|       ||     ● ||     ● || ●   ● || ●   ● |    1/3
+|   ●   ||       ||   ●   ||       ||   ●   |
+|       || ●     || ●     || ●   ● || ●   ● |
+└───────┘└───────┘└───────┘└───────┘└───────┘  Roll Dice
+   ( )      ( )      ( )      ( )      ( )       (x)   
+
+( ) Ones           [XX]  |  XX  |  +XX
+( ) Twos           [XX]  |  XX  |  -XX
+( ) Threes         [XX]  |  XX  |  +XX
+( ) Fours          [XX]  |  XX  |  -XX
+( ) Fives          [XX]  |  XX  |  +XX
+( ) Sixes          [XX]  |  XX  |  -XX
+                         |
+    Sum                  |  XX  |  +XX
+    Bonus (+35)          |  XX
+    Upper Total          | YYY
+                         |
+( ) 3 of a Kind    [XX]  |  XX
+( ) 4 of a Kind    [XX]  |  XX
+( ) Full House     [XX]  |  XX
+( ) sm. Straight   [XX]  |  XX
+( ) lg. Straight   [XX]  |  XX
+( ) Yahtzee        [XX]  |  XX
+( ) Chance         [XX]  |  XX
+                         |
+    Lower Total          | YYY
+    Upper Total          | YYY
+    Total Score          | YYY
+
+
+
+
+Ones
+Twos
+Threes
+Fours
+Fives
+Sixes
+USum,
+Bonus,
+UTotal1,
+
+Kind3,
+Kind4,
+FullHouse,
+smStr,
+lgStr,
+Kniffel,
+Chance,
+LTotal,
+UTotal2,
+Score,
+
+die1,
+die2,
+die3,
+die4,
+die5,
+roll,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

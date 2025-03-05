@@ -1,0 +1,35 @@
+{
+"┌───────┐┌───────┐┌───────┐┌───────┐┌───────┐         ",
+"|       ||     ● ||     ● || ●   ● || ●   ● |    1/3  ",
+"|   ●   ||       ||   ●   ||       ||   ●   |         ",
+"|       || ●     || ●     || ●   ● || ●   ● |         ",
+"└───────┘└───────┘└───────┘└───────┘└───────┘  Würfeln",
+"   ( )      ( )      ( )      ( )      ( )       (x)  ",
+"                                                      ",
+"( ) Einser         [XX]  |  XX  |  +XX                ",
+"( ) Zweier         [XX]  |  XX  |  -XX                ",
+"( ) Dreier         [XX]  |  XX  |  +XX                ",
+"( ) Vierer         [XX]  |  XX  |  -XX                ",
+"( ) Fünfer         [XX]  |  XX  |  +XX                ",
+"( ) Sechser        [XX]  |  XX  |  -XX                ",
+"                         |                            ",
+"( ) Summe          [XX]  |  XX  |  +XX                ",
+"( ) Bonus (+35)    [XX]  |  XX                        ",
+"( ) Gesamt oben    [XX]  | YYY                        ",
+"                         |                            ",
+"( ) Dreierpasch    [XX]  |  XX                        ",
+"( ) Viererpasch    [XX]  |  XX                        ",
+"( ) Full House     [XX]  |  XX                        ",
+"( ) Kleine Straße  [XX]  |  XX                        ",
+"( ) Große Straße   [XX]  |  XX                        ",
+"( ) Kniffel        [XX]  | YYY                        ",
+"( ) Chance         [XX]  |  XX                        ",
+"                         |                            ",
+"( ) Gesamt unten   [XX]  | YYY                        ",
+"( ) Gesamt oben    [XX]  | YYY                        ",
+"( ) Erbegnis       [XX]  | YYY                        "
+}
+
+
+
+
