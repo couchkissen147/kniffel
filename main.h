@@ -46,20 +46,27 @@ typedef enum
 } special;
 
 typedef enum {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    QUIT,
-    DIE1,
-    DIE2,
-    DIE3,
-    DIE4,
-    DIE5,
-    ROLL,
-    ENTER,
+    UP      =0,
+    DOWN    =1,
+    LEFT    =2,
+    RIGHT   =3,
+    QUIT    =4,
+    DIE1    =5,
+    DIE2    =6,
+    DIE3    =7,
+    DIE4    =8,
+    DIE5    =9,
+    ROLL    =10,
+    ENTER   =11,
 
 } command;
+
+typedef enum {
+    Starting,
+    Rolling,
+    Chosen,
+    Over,
+} status;
 
 struct gamestate {
     special currentSelection;
@@ -67,6 +74,8 @@ struct gamestate {
     int diceToggled[5];
     int rolls;
     int scores[25];
+    status status;
+    int extraInfos[13];
 
 };
 
@@ -95,7 +104,7 @@ char map[LINES][COLUMNS] = {
     "( ) Kleine Strasse [  ]  |      |                         ",
     "( ) Grosse Strasse [  ]  |      |                         ",
     "( ) Kniffel        [  ]  |      |                         ",
-    "( ) Chance         [  ]  |      |                         ",
+    "( ) Chance         [  ]  |                                ",
     "                         |                                ",
     "    Gesamt unten         |                                ",
     "    Gesamt oben          |                                ",
@@ -116,13 +125,13 @@ special nextSelection[19][4] = {
     /*smStr*/      {FullHouse,lgStr,smStr,smStr},
     /*lgStr*/      {smStr,Kniffel,lgStr,lgStr},
     /*Kniffel*/    {lgStr,Chance,Kniffel,Kniffel},
-    /*Chance*/     {Kniffel,Chance,Chance,Chance},
-    /*die1*/       {die1,Ones,die1,die2},
-    /*die2*/       {die2,Ones,die1,die3},
-    /*die3*/       {die3,Ones,die2,die4},
-    /*die4*/       {die4,Ones,die3,die5},
-    /*die5*/       {die5,Ones,die4,roll},
-    /*roll*/       {roll,Ones,die5,roll},
+    /*Chance*/     {Kniffel,die1,Chance,Chance},
+    /*die1*/       {Chance,Ones,die5,die2},
+    /*die2*/       {Chance,Ones,die1,die3},
+    /*die3*/       {Chance,Ones,die2,die4},
+    /*die4*/       {Chance,Ones,die3,die5},
+    /*die5*/       {Chance,Ones,die4,roll},
+    /*roll*/       {roll,Ones,die5,die1},
 };
 
 int coordsSelection[19][2] = {

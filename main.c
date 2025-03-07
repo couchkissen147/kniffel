@@ -80,6 +80,9 @@ void changeSelection(struct gamestate* game, command dir) {
     special next = nextSelection[selection][dir];
     mapSetSelection(next);
     game->currentSelection = next;
+    if(game->scores[game->currentSelection] > -1) {
+        changeSelection(game, dir);
+    }
 }
 
 void hideDie(int die) {
@@ -213,7 +216,58 @@ void showPossibleScores(struct gamestate* game) {
     
 }
 
+void showExtraInfos(struct gamestate* game) {
+    int* s = game->scores;
+    for(int i=0;i<6;i++) {
+        if(s[i] > -1) {
+            int diff = s[i] - 3*(i+1);
+            game->extraInfos[i] = diff;
+            if(diff < 0) {
+                diff *= -1;
+                int tmp1 = diff/10;
+                int tmp2 = diff%10;
+                map[i+7][35] = '-';
+                map[i+7][36] = tmp1 + '0';
+                map[i+7][37] = tmp2 + '0';
+            }
+            else if(diff > 0) {
+                int tmp1 = diff/10;
+                int tmp2 = diff%10;
+                map[i+7][35] = '+';
+                map[i+7][36] = tmp1 + '0';
+                map[i+7][37] = tmp2 + '0';
+            }
+        }
+    }
+
+    int diff = 0;
+    for(int i=0;i<6;i++) {
+        if(game->extraInfos[i] < 999) {
+            diff += game->extraInfos[i];
+        }
+    }
+    game->extraInfos[6] = diff;
+    if(diff < 0) {
+        diff *= -1;
+        int tmp1 = diff/10;
+        int tmp2 = diff%10;
+        map[14][35] = '-';
+        map[14][36] = tmp1 + '0';
+        map[14][37] = tmp2 + '0';
+    }
+    else if(diff > 0) {
+        int tmp1 = diff/10;
+        int tmp2 = diff%10;
+        map[14][35] = '+';
+        map[14][36] = tmp1 + '0';
+        map[14][37] = tmp2 + '0';
+    }
+}
+
 void rollDice(struct gamestate* game) {
+    if(game->status == Starting) {
+        game->status = Rolling;
+    }
     if(game->diceToggled[0]+game->diceToggled[1]+game->diceToggled[2]+game->diceToggled[3]+game->diceToggled[4] == 5) {
         return;
     }
@@ -230,9 +284,36 @@ void rollDice(struct gamestate* game) {
     showPossibleScores(game);
 }
 
+void resetNewRound(struct gamestate* game) {
+    mapClearSelection(game->currentSelection);
+    mapSetSelection(die1);
+    game->status = Starting;
+    game->currentSelection = die1;
+    game->rolls = 0;
+    for(int i=0;i<5;i++) {
+        game->dice[i] = 0;
+        toggleDie(game, i+5);
+    }
+    for(int i=7;i<25;i++) {
+            map[i][20] = ' ';
+            map[i][21] = ' ';
+            if(i>=18) {
+                map[i][34] = ' ';
+                map[i][35] = ' ';
+                map[i][36] = ' ';
+                map[i][37] = ' ';
+            }
+    }
+}
+
 void enterScore(struct gamestate* game, special field) {
-    int s = getScore(game->dice, field);
-    game->scores[field] = s;
+    if(game->scores[field] == -1) {
+        game->status = Chosen;
+        int s = getScore(game->dice, field);
+        game->scores[field] = s;
+        resetNewRound(game);
+    }
+    
 }
 
 void confirmSelection(struct gamestate* game) {
@@ -261,7 +342,7 @@ void confirmSelection(struct gamestate* game) {
                 rollDice(game);
                 break;
         }
-    } else if(game->rolls > 0){
+    } else if(game->rolls > 0 && game->status == Rolling){
         switch(selection) {
             case Ones:
                 enterScore(game,Ones);
@@ -314,6 +395,8 @@ struct gamestate initGamestate() {
                                 {0,0,0,0,0},
                                 0,
                                 {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
+                                Starting,
+                                {999,999,999,999,999,999,999,999,999,999,999,999,999},
                             };
     return game;
 }
@@ -348,7 +431,7 @@ void showScores(struct gamestate* game) {
                 map[i+off][28] = tmp +'0';
                 map[i+off][29] = s%10 +'0';    
             } else {
-                int tmp = s/10;
+                int tmp = (s/10)%10;
                 int tmp2= s/100;
                 map[i+off][27] = tmp2 + '0';
                 map[i+off][28] = tmp +'0';
@@ -360,9 +443,14 @@ void showScores(struct gamestate* game) {
 
 void printMap(struct gamestate* game) {
     showScores(game);
+    showExtraInfos(game);
     printf("\033[H\033[J\033[H");
     for(int i=0;i<LINES;i++) {
             printf("%s\n",map[i]);
+    }
+    printf("Status: %d\n",game->status);
+    for(int i=0;i<6;i++) {
+        printf("(%d: %d)",i,game->extraInfos[i]);    
     }
     fflush(stdout);
 }
@@ -371,15 +459,14 @@ int main() {
     struct gamestate game = init();
     printMap(&game);
 
-    while(1) {
+    while(game.status != Over) {
         command key = getkey();
 
         if(key <= 3) {  // Arrowkey
             changeSelection(&game, key);
         } 
         else if(key == QUIT) {
-            printf("\033[H\033[J");
-            return 0;
+            game.status = Over;
         }
         else if(key <= 9 && game.rolls < 3 && game.rolls > 0) { // Number 1-5
             toggleDie(&game, key);
@@ -391,10 +478,8 @@ int main() {
             confirmSelection(&game);
         }
 
-        
-
-
         printMap(&game);
     }
+    printf("\033[H\033[J");
     return 0;
 }
